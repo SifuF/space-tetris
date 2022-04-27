@@ -19,3 +19,4 @@ Right player:
   Drop : Down arrow key
 
 ```
+![Tetris image](img/tetris.png)
