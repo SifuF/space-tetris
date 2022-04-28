@@ -19,4 +19,11 @@ Right player:
   Drop : Down arrow key
 
 ```
-![Tetris image](img/tetris.png)
+
+For graphical version, keep ```#define GRAPHICS``` before any includes in ```Manager.h```
+
+![Tetris image](img/tetrisG.png)
+
+Comment that line out for barebones look ```//#define GRAPHICS```
+
+![Tetris image2](img/tetris.png)
