@@ -3,7 +3,6 @@
 
 #include "Tetromino.h"
 
-
 class LineArray {
 private:
 	sf::VertexArray verts;
@@ -50,8 +49,11 @@ private:
 	int fullFrameCounter = 0;
 	int advanceCounter = 0;
 
+	Timer timer;
 	Sound sound;
-	bool fullSoundLatch = false;
+	bool fullLatch = false;
+
+	std::chrono::time_point<std::chrono::steady_clock> timeDown;
 
 	int level = 1;
 	int score = 0;
@@ -93,7 +95,6 @@ public:
 		loadHiScores();
 		reset();
 
-		
 	}
 
 	void loadHiScores() {
@@ -115,35 +116,34 @@ public:
 			std::cout << "Unable to open data.txt"<< std::endl;
 		}
 
-		
-	}
-
-	void buildPlayfield2() {
-		
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
-
 	}
 
 	void buildPlayfield() {
+		
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
+
+	}
+
+	void buildPlayfield2() {
 
 		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
 		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
@@ -188,9 +188,10 @@ public:
 			}
 			if (full) {
 				fullFrame = true;
-				if (!fullSoundLatch) {
+				if (!fullLatch) {
 					sound.playFullSound();
-					fullSoundLatch = true;
+					timer.start();
+					fullLatch = true;
 				}
 				for (int i = 0; i < playfield[j].size(); i++) {
 					playfield[j][i] = 8;
@@ -287,21 +288,22 @@ public:
 
 	void update() {
 
-		if (fullFrame) {
-			fullFrameCounter++;
-		}
-
 		tetromino.update(pos);
 		wallKick();
 		groundKick();
 		checkPlayfield();
 		checkDeath();
-
-		if (fullFrameCounter > 150) {
-			removeFromPlayfield();
-			fullFrameCounter = 0;
-			fullSoundLatch = false;
+		timer.update();
+	
+		if (fullFrame) {
+			double whiteTime = 0.25;
+			if (timer.getSeconds() > whiteTime) {
+				removeFromPlayfield();
+				fullLatch = false;
+				timer.stop();
+			}
 		}
+
 	}
 
 	void advance() {
@@ -359,6 +361,16 @@ public:
 		}
 
 		return filled;
+	}
+
+	void moveTetrominoDownFromKey() {
+		double dropSpeed = 0.025;
+		auto timeNow = std::chrono::steady_clock::now();
+		std::chrono::duration<double> elapsed_seconds = timeNow - timeDown;
+		if (elapsed_seconds.count() > dropSpeed) {
+			moveTetromino(0);
+			timeDown = timeNow;
+		}
 	}
 
 	void moveTetromino(int dir) {

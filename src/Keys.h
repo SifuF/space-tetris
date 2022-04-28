@@ -14,7 +14,6 @@ private:
 	bool upLatch1 = false;
     bool insertLatch1 = false;
     bool clearLatch1 = false;
-    int dropCounter1 = 0;
 	int t_type1 = 0;
 
     bool rotateLatch2 = false;
@@ -25,7 +24,6 @@ private:
     bool upLatch2 = false;
     bool insertLatch2 = false;
     bool clearLatch2 = false;
-    int dropCounter2 = 0;
     int t_type2 = 0;
 
 public:
@@ -42,8 +40,6 @@ public:
     }
 
     void check() {
-        dropCounter1++;
-        dropCounter2++;
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             if (!moveLeftLatch1) {
@@ -66,10 +62,7 @@ public:
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-            if (dropCounter1 > 25) {
-                grid1->moveTetromino(0);
-                dropCounter1 = 0;;
-            }
+                grid1->moveTetrominoDownFromKey();
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
@@ -186,10 +179,7 @@ public:
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            if (dropCounter2 > 25) {
-                grid2->moveTetromino(0);
-                dropCounter2 = 0;
-            }
+            grid2->moveTetrominoDownFromKey();
         }
     }
 };
