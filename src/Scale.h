@@ -21,6 +21,8 @@ public:
 	sf::RenderWindow window;
 	sf::Color Orange;
 
+	bool graphics = true;
+
 
 	Scale() {
 		window.create(sf::VideoMode(screenWidth, screenHeight), "SifuF Tetris");

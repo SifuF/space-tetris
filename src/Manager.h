@@ -10,6 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "Scale.h"
+#include "Timer.h"
 #include "Sound.h"
 #include "Grid.h"
 #include "Tetromino.h"
@@ -28,8 +29,6 @@ private:
 	sf::Music music;
 
     bool twoPlayer = true;
-
-    
 
 public:
 
@@ -55,8 +54,8 @@ public:
     }
     
     void run() {
-        auto timeNow = std::chrono::steady_clock::now();
-        auto timePrev = timeNow;
+ 
+        auto timePrev = std::chrono::steady_clock::now();
         double frameTime = 0.5;
 
         while (scale.window.isOpen())
@@ -84,7 +83,7 @@ public:
                 grid2.draw();
             }
 
-            timeNow = std::chrono::steady_clock::now();
+            auto timeNow = std::chrono::steady_clock::now();
             std::chrono::duration<double> elapsed_seconds = timeNow - timePrev;
             if (elapsed_seconds.count() > frameTime) {
                 advance();

@@ -5,8 +5,15 @@ enum type { I, O, T, J, L, S, Z };
 
 class Block {
 private:
-	sf::RectangleShape shape;
+
 	float length;
+
+#ifdef GRAPHICS
+	sf::Sprite shape;
+	sf::Texture shapeT;
+#else
+	sf::RectangleShape shape;
+#endif
 
 public:
 
@@ -14,9 +21,18 @@ public:
 
 	void init(float l) {
 		length = l;
+		shape.setPosition(100.0f, 100.0f);
+
+#ifdef GRAPHICS
+		shapeT.loadFromFile("gfx/block.png");
+		shape.setTexture(shapeT);
+		shape.setTextureRect(sf::IntRect(400, 0, 100, 100));
+		shape.setScale(length / float(shapeT.getSize().x/9), length / float(shapeT.getSize().y));
+#else
 		sf::Vector2f v(length, length);
 		shape.setSize(v);
-		shape.setPosition(100.0f, 100.0f);
+#endif
+
 	}
 
 	void draw() {
@@ -36,7 +52,25 @@ public:
 	}
 
 	void setColor(sf::Color c) {
-		shape.setFillColor(c);
+#ifdef GRAPHICS			
+		switchColor(c);			//seperate image for each mino
+		//shape.setColor(c);	//single texture blended with color value
+#else
+		
+		shape.setFillColor(c);	//used for RectangleShape
+#endif	
+	}
+
+	void switchColor(sf::Color c) {
+		if (c == sf::Color::Red) { shape.setTextureRect(sf::IntRect(0, 0, 100, 100)); }
+		else if (c == sf::Color::Green) { shape.setTextureRect(sf::IntRect(100, 0, 100, 100)); }
+		else if (c == sf::Color::Blue) { shape.setTextureRect(sf::IntRect(200, 0, 100, 100)); }
+		else if (c == sf::Color::Yellow) { shape.setTextureRect(sf::IntRect(300, 0, 100, 100)); }
+		else if (c == sf::Color::Cyan) { shape.setTextureRect(sf::IntRect(400, 0, 100, 100)); }
+		else if (c == sf::Color::Magenta) { shape.setTextureRect(sf::IntRect(500, 0, 100, 100)); }
+		else if (c == scale.Orange) { shape.setTextureRect(sf::IntRect(600, 0, 100, 100)); }
+		else if (c == sf::Color::White) { shape.setTextureRect(sf::IntRect(700, 0, 100, 100)); }
+		else if (c == sf::Color::Black) { shape.setTextureRect(sf::IntRect(800, 0, 100, 100)); }
 	}
 
 	~Block() {}

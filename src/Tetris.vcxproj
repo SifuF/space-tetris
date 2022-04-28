@@ -154,6 +154,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Background.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Keys.h" />
     <ClInclude Include="Manager.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Tetromino.h" />
     <ClInclude Include="Text.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
