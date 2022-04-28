@@ -1,6 +1,8 @@
 #ifndef MANAGER_H
 #define MANAGER_H
 
+#define GRAPHICS
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -13,6 +15,7 @@
 #include "Tetromino.h"
 #include "Keys.h"
 #include "Text.h"
+#include "Background.h"
 
 class GameManager {
 private: 
@@ -20,10 +23,13 @@ private:
 	Grid grid2;
     Keys keys;
     ScoreManager scoreManager;
+    Background background;
 
 	sf::Music music;
 
     bool twoPlayer = true;
+
+    
 
 public:
 
@@ -41,6 +47,7 @@ public:
         }
         music.setLoop(true);
         music.play();
+        
 	}
     void advance() {
         grid1.advance();
@@ -64,6 +71,11 @@ public:
             keys.check();
             scale.window.clear();
 
+#ifdef GRAPHICS
+            background.update();
+            background.draw();
+#endif
+            
             grid1.update();
             grid1.draw();
 
