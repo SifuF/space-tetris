@@ -1,8 +1,6 @@
 #ifndef MANAGER_H
 #define MANAGER_H
 
-#define GRAPHICS
-
 #include <iostream>
 #include <fstream>
 #include <vector>
