@@ -6,10 +6,13 @@ project(Tetris VERSION 1.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+<<<<<<< HEAD
 option(FOO_ENABLE "Enable Foo" ON)
 if(FOO_ENABLE)
   set(FOO_STRING "foo")
 endif()
+=======
+>>>>>>> 00c528b783eeadbb68c3b33ae82a8d480d7bd13f
 configure_file(TetrisConfig.h.in TetrisConfig.h)
 
 add_executable(Tetris main.cpp)
