@@ -6,24 +6,28 @@
 class LineArray {
 private:
 	sf::VertexArray verts;
-
+	sf::RenderWindow* m_window{};
 public:
 
 	LineArray() {
-		verts.setPrimitiveType(sf::Lines);
+		verts.setPrimitiveType(sf::PrimitiveType::Lines);
+	}
+
+	void init(sf::RenderWindow* window) {
+		m_window = window;
 	}
 
 	void draw() {
-		scale.window.draw(verts);
+		m_window->draw(verts);
 	}
 
 	void append(vec2f v) {
-		verts.append(v);
+		verts.append({v, sf::Color::White, {}});
 	}
 
 	void append(float x, float y) {
-		vec2f v(x, y);
-		verts.append(v);
+		const vec2f v(x, y);
+		verts.append({ v, sf::Color::White, {} });
 	}
 
 	void clear() {
@@ -63,30 +67,33 @@ private:
 	const char* filename = "data.txt";
 	const char* filename2 = "data2.txt";
 
-public:
+	sf::RenderWindow* m_window{};
 
+public:
 	Grid() {}
 
-	void init(vec2f p, float s, bool two = false) {
+	void init(vec2f p, float s, sf::RenderWindow* window, bool two = false) {
+		m_window = window;
 		srand(time(NULL));
 		player2 = two;
 		size = s;
 		pos = p;
-		gridWidth = scale.screenWidth - size;
-		length = gridWidth/ scale.columns;
-		gridHeight = length * scale.rows;
+		gridWidth = GameConfig::screenWidth - size;
+		length = gridWidth / GameConfig::columns;
+		gridHeight = length * GameConfig::rows;
 		
-		for (int i = 0; i < scale.columns + 1; i++) {
+		lines.init(m_window);
+		for (int i = 0; i < GameConfig::columns + 1; i++) {
 			lines.append(pos.x + i * length, pos.y);
 			lines.append(pos.x + i * length, pos.y + gridHeight);
 		}
-		for (int i = 0; i < scale.rows + 1; i++) {
+		for (int i = 0; i < GameConfig::rows + 1; i++) {
 			lines.append(pos.x, pos.y + i * length);
 			lines.append(pos.x + gridWidth, pos.y + i * length);
 		}
 
-		tetromino.init(length, pos, randomType());
-		block.init(length);
+		tetromino.init(length, pos, randomType(), m_window);
+		block.init(length, m_window);
 		
 		next = randomType();
 
@@ -115,11 +122,9 @@ public:
 		else {
 			std::cout << "Unable to open data.txt"<< std::endl;
 		}
-
 	}
 
 	void buildPlayfield() {
-		
 		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
 		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
 		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
@@ -144,7 +149,6 @@ public:
 	}
 
 	void buildPlayfield2() {
-
 		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
 		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
 		playfield.push_back({ 0,0,0,0,0,0,0,0,0,0 });
@@ -241,7 +245,7 @@ public:
 					block.setColor(sf::Color::Blue);
 				}
 				else if (playfield[j][i] == 5) {	//L
-					block.setColor(scale.Orange);
+					block.setColor(GameConfig::Orange);
 				}
 				else if (playfield[j][i] == 6) {	//S
 					block.setColor(sf::Color::Green);
@@ -274,11 +278,11 @@ public:
 		
 		lines.clear();
 
-		for (int i = 0; i < scale.columns + 1; i++) {
+		for (int i = 0; i < GameConfig::columns + 1; i++) {
 			lines.append(pos.x + i * length, pos.y);
 			lines.append(pos.x + i * length, pos.y + gridHeight);
 		}
-		for (int i = 0; i < scale.rows + 1; i++) {
+		for (int i = 0; i < GameConfig::rows + 1; i++) {
 			lines.append(pos.x, pos.y + i * length);
 			lines.append(pos.x + gridWidth, pos.y + i * length);
 		}
@@ -303,7 +307,6 @@ public:
 				timer.stop();
 			}
 		}
-
 	}
 
 	void advance() {
@@ -542,10 +545,10 @@ public:
 		vec2f p = { pos.x + 7 * length, pos.y - 2 * length - 7.0f };
 		vec2f p_I = { pos.x + 7 * length - length, pos.y - 2 * length - 7.0f };
 		if (next == I) {
-			n.init(length, p_I, next);
+			n.init(length, p_I, next, m_window);
 		}
 		else {
-			n.init(length, p, next);
+			n.init(length, p, next, m_window);
 		}
 		n.draw();
 	}

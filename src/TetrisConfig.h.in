@@ -1,3 +1,0 @@
-#define Tetris_VERSION_MAJOR @Tetris_VERSION_MAJOR@
-#define Tetris_VERSION_MINOR @Tetris_VERSION_MINOR@
-#cmakedefine GRAPHICS

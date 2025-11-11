@@ -3,43 +3,44 @@
 
 class Text {
 private:
-	sf::Text text;
+	std::optional<sf::Text> text;
 	sf::Font font;
+	sf::RenderWindow* m_window;
 
 public:
-
 	Text() {
-		
-		if (!font.loadFromFile("arial.ttf")) {
-			std::cout << "Cannot load font!" << std::endl;
+		if (!font.openFromFile("fonts/arial.ttf")) {
+			throw std::runtime_error("Cannot load font");
 		}
 
-		text.setFont(font);
-		text.setString("Hello world");
-		text.setCharacterSize(24);
-		text.setFillColor(sf::Color::Red);
-		text.setStyle(sf::Text::Bold);
+		text.emplace(font, "Hello world", 24);
+		text->setFillColor(sf::Color::Red);
+		text->setStyle(sf::Text::Bold);
+	}
+
+	void init(sf::RenderWindow* window) {
+		m_window = window;
 	}
 
 	void update(std::string str, int data) {
 		std::string s = std::to_string(data);
-		text.setString(str + s);
+		text->setString(str + s);
 	}
 
 	void setPosition(vec2f pos) {
-		text.setPosition(pos);
+		text->setPosition(pos);
 	}
 
 	vec2f getPosition() {
-		return text.getPosition();
+		return text->getPosition();
 	}
 
 	void setColor(sf::Color color) {
-		text.setFillColor(color);
+		text->setFillColor(color);
 	}
 
 	void draw() {
-		scale.window.draw(text);
+		m_window->draw(text.value());
 	}
 };
 
@@ -48,13 +49,16 @@ private:
 	Text text;
 	Grid* grid1;
 	Grid* grid2;
+	sf::RenderWindow* m_window;
 
 public:
 	ScoreManager() {}
 
-	void init(Grid* g1, Grid* g2) {
+	void init(Grid* g1, Grid* g2, sf::RenderWindow* window) {
 		grid1 = g1;
 		grid2 = g2;
+		m_window = window;
+		text.init(window);
 	}
 
 	void updateAndDraw() {

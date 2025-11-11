@@ -41,7 +41,7 @@ public:
 
     void check() {
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
             if (!moveLeftLatch1) {
                 grid1->moveTetromino(-1);
                 moveLeftLatch1 = true;
@@ -51,7 +51,7 @@ public:
             moveLeftLatch1 = false;
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
             if (!moveRightLatch1) {
                 grid1->moveTetromino(1);
                 moveRightLatch1 = true;
@@ -61,11 +61,11 @@ public:
             moveRightLatch1 = false;
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
                 grid1->moveTetrominoDownFromKey();
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::I)) {
             if (!upLatch1) {
                 grid1->reset();
                 upLatch1 = true;
@@ -75,7 +75,7 @@ public:
             upLatch1 = false;
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
             if (!insertLatch1) {
                 grid1->insertToPlayfield();
                 insertLatch1 = true;
@@ -85,7 +85,7 @@ public:
             insertLatch1 = false;
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
             if (!clearLatch1) {
                 grid1->resetGame();
                 clearLatch1 = true;
@@ -95,7 +95,7 @@ public:
             clearLatch1 = false;
         }
 
-        if ((sf::Keyboard::isKeyPressed(sf::Keyboard::T)) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T)) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
             if (!rotateLatch1) {
                 grid1->rotate();
                 rotateLatch1 = true;
@@ -106,7 +106,7 @@ public:
         }
 
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Y)) {
             if (!typeLatch1) {
 
                 if (t_type1 > 6) { t_type1 = 0; }
@@ -148,7 +148,7 @@ public:
 
         //Player 2
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
             if (!moveLeftLatch2) {
                 grid2->moveTetromino(-1);
                 moveLeftLatch2 = true;
@@ -158,7 +158,7 @@ public:
             moveLeftLatch2 = false;
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
             if (!moveRightLatch2) {
                 grid2->moveTetromino(1);
                 moveRightLatch2 = true;
@@ -168,7 +168,7 @@ public:
             moveRightLatch2 = false;
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
             if (!rotateLatch2) {
                 grid2->rotate();
                 rotateLatch2 = true;
@@ -178,7 +178,7 @@ public:
             rotateLatch2 = false;
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
             grid2->moveTetrominoDownFromKey();
         }
     }

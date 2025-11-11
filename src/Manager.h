@@ -7,7 +7,7 @@
 #include <chrono>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "Scale.h"
+#include "GameConfig.h"
 #include "Timer.h"
 #include "Sound.h"
 #include "Grid.h"
@@ -28,21 +28,27 @@ private:
 
     bool twoPlayer = true;
 
+    sf::RenderWindow window;
+
 public:
 
 	GameManager() {
+        window.create(sf::VideoMode(sf::Vector2u(GameConfig::screenWidth,GameConfig::screenHeight )), "SifuF Tetris");
+
         float xBorder = 50.0f;
         float yBorder = 100.0f;
-        grid1.init({0.0f + xBorder, yBorder }, 650.0f);
-        grid2.init({scale.screenWidth/2.0f + xBorder, yBorder }, 650.0f, true);
+        grid1.init({0.0f + xBorder, yBorder }, 650.0f, &window);
+        grid2.init({ GameConfig::screenWidth/2.0f + xBorder, yBorder }, 650.0f, &window, true);
 
         keys.init(&grid1, &grid2);
-        scoreManager.init(&grid1, &grid2);
+        scoreManager.init(&grid1, &grid2, &window);
+
+        background.init(&window);
 
         if (!music.openFromFile("sound/music.ogg")) {
             std::cout << "error cannot load music!" << std::endl;
         }
-        music.setLoop(true);
+        music.setLooping(true);
         music.play();
         
 	}
@@ -52,27 +58,24 @@ public:
     }
     
     void run() {
- 
         auto timePrev = std::chrono::steady_clock::now();
         double frameTime = 0.5;
 
-        while (scale.window.isOpen())
+        while (window.isOpen())
         {
-            sf::Event event;
-            while (scale.window.pollEvent(event))
-            {
-                if (event.type == sf::Event::Closed)
-                    scale.window.close();
+            while (const std::optional event = window.pollEvent()) {
+                if (event->is<sf::Event::Closed>() || (event->is<sf::Event::KeyPressed>() &&
+                    event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Escape)) {
+                    window.close();
+                }
             }
-
             keys.check();
-            scale.window.clear();
+            window.clear();
 
 #ifdef GRAPHICS
             background.update();
             background.draw();
 #endif
-            
             grid1.update();
             grid1.draw();
 
@@ -89,8 +92,7 @@ public:
             }
 
             scoreManager.updateAndDraw();
-
-            scale.window.display();
+            window.display();
         }
     }
 };

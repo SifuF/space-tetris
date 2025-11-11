@@ -1,6 +1,8 @@
 #ifndef TETROMINO_H
 #define TETROMINO_H
 
+#include <optional>
+
 enum type { I, O, T, J, L, S, Z };         
 
 class Block {
@@ -9,52 +11,54 @@ private:
 	float length;
 
 #ifdef GRAPHICS
-	sf::Sprite shape;
+	std::optional<sf::Sprite> shape;
 	sf::Texture shapeT;
 #else
 	sf::RectangleShape shape;
 #endif
 
-public:
+	sf::RenderWindow* m_window{};
 
+public:
 	Block() {}
 
-	void init(float l) {
+	void init(float l, sf::RenderWindow* window) {
+		m_window = window;
 		length = l;
-		shape.setPosition(100.0f, 100.0f);
-
 #ifdef GRAPHICS
-		shapeT.loadFromFile("gfx/block.png");
-		shape.setTexture(shapeT);
-		shape.setTextureRect(sf::IntRect(400, 0, 100, 100));
-		shape.setScale(length / float(shapeT.getSize().x/9), length / float(shapeT.getSize().y));
+		if (!shapeT.loadFromFile("gfx/block.png")) {
+			throw std::runtime_error("Cannot open block texture");
+		}
+		shape.emplace(shapeT);
+		shape->setTextureRect(sf::IntRect({ 400, 0 }, { 100, 100 }));
+		shape->setScale({ length / float(shapeT.getSize().x / 9), length / float(shapeT.getSize().y) });
 #else
 		sf::Vector2f v(length, length);
 		shape.setSize(v);
 #endif
-
+		shape->setPosition({ 100.0f, 100.0f });
 	}
 
 	void draw() {
-		scale.window.draw(shape);
+		m_window->draw(shape.value());
 	}
 
 	vec2f getPosition() {
-		return shape.getPosition();
+		return shape->getPosition();
 	}
 
 	void setPosition(vec2f v) {
-		shape.setPosition(v);
+		shape->setPosition(v);
 	}
 
 	void setPosition(float x, float y) {
-		shape.setPosition(x, y);
+		shape->setPosition({ x, y });
 	}
 
 	void setColor(sf::Color c) {
 #ifdef GRAPHICS			
 		switchColor(c);			//seperate image for each mino
-		//shape.setColor(c);	//single texture blended with color value
+		//shape->setColor(c);	//single texture blended with color value
 #else
 		
 		shape.setFillColor(c);	//used for RectangleShape
@@ -62,15 +66,15 @@ public:
 	}
 
 	void switchColor(sf::Color c) {
-		if (c == sf::Color::Red) { shape.setTextureRect(sf::IntRect(0, 0, 100, 100)); }
-		else if (c == sf::Color::Green) { shape.setTextureRect(sf::IntRect(100, 0, 100, 100)); }
-		else if (c == sf::Color::Blue) { shape.setTextureRect(sf::IntRect(200, 0, 100, 100)); }
-		else if (c == sf::Color::Yellow) { shape.setTextureRect(sf::IntRect(300, 0, 100, 100)); }
-		else if (c == sf::Color::Cyan) { shape.setTextureRect(sf::IntRect(400, 0, 100, 100)); }
-		else if (c == sf::Color::Magenta) { shape.setTextureRect(sf::IntRect(500, 0, 100, 100)); }
-		else if (c == scale.Orange) { shape.setTextureRect(sf::IntRect(600, 0, 100, 100)); }
-		else if (c == sf::Color::White) { shape.setTextureRect(sf::IntRect(700, 0, 100, 100)); }
-		else if (c == sf::Color::Black) { shape.setTextureRect(sf::IntRect(800, 0, 100, 100)); }
+		if (c == sf::Color::Red) { shape->setTextureRect(sf::IntRect({ 0, 0 }, { 100, 100 })); }
+		else if (c == sf::Color::Green) { shape->setTextureRect(sf::IntRect({ 100, 0 }, { 100, 100 })); }
+		else if (c == sf::Color::Blue) { shape->setTextureRect(sf::IntRect({ 200, 0 }, { 100, 100 })); }
+		else if (c == sf::Color::Yellow) { shape->setTextureRect(sf::IntRect({ 300, 0 }, { 100, 100 })); }
+		else if (c == sf::Color::Cyan) { shape->setTextureRect(sf::IntRect({ 400, 0 }, { 100, 100 })); }
+		else if (c == sf::Color::Magenta) { shape->setTextureRect(sf::IntRect({ 500, 0 }, { 100, 100 })); }
+		else if (c == GameConfig::Orange) { shape->setTextureRect(sf::IntRect({ 600, 0}, {100, 100 })); }
+		else if (c == sf::Color::White) { shape->setTextureRect(sf::IntRect({ 700, 0 }, { 100, 100 })); }
+		else if (c == sf::Color::Black) { shape->setTextureRect(sf::IntRect({ 800, 0 }, { 100, 100 })); }
 	}
 
 	~Block() {}
@@ -85,17 +89,19 @@ private:
 	float length;
 	type t;
 
+	sf::RenderWindow* m_window{};
+
 public:
 	
 	Tetromino() {}
 
-	void init(float l, vec2f p, type ty) {
+	void init(float l, vec2f p, type ty, sf::RenderWindow* window) {
 		length = l;
 		pos0 = p;
 		pos = { 0.0f, 0.0f };
-
+		m_window = window;
 		for (int i = 0; i < 4; i++) {
-			block[i].init(length);
+			block[i].init(length, m_window);
 		}
 
 		t = ty;
@@ -120,7 +126,6 @@ public:
 	}
 
 	void update(vec2f p) {
-
 		switch (t) {
 		case I:
 			if (rot == 0) {
@@ -259,7 +264,7 @@ public:
 				block[2].setPosition(pos0.x + pos.x + length, pos0.y + pos.y);
 				block[3].setPosition(pos0.x + pos.x, pos0.y + pos.y);
 			}
-			for (int i = 0; i < 4; i++) { block[i].setColor(scale.Orange); }
+			for (int i = 0; i < 4; i++) { block[i].setColor(GameConfig::Orange); }
 			break;
 
 		case S:
@@ -320,9 +325,7 @@ public:
 		}
 	}
 
-
 	void update2(vec2f p) {
-
 		switch (t) {
 		case I:
 			if (rot == 0 || rot == 2) {
