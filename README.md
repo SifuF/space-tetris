@@ -6,42 +6,11 @@ Two player vs battle Tetris game
 [Click here for video](img/tetris.mp4)
 
 ## Build
-#### Linux
-
-Install CMake, e.g. for Debian/Ubuntu:
 ```
-sudo apt-get install build-essential libssl-dev
-sudo apt-get install cmake
+git submodule update --init
+mkdir build && cd build
+cmake --build .
 ```
-Install SFML:
-```
-sudo apt-get install libsfml-dev
-```
-
-Clone repo and make a new directory called ```build``` inside the ```src```
-directory and enter it.
-```
-cd {DOWNLOAD_LOCATION}/space-tetris/src
-mkdir build
-cd build
-```
-run CMake
-```
-cmake ../
-```
-
-run make
-```
-make
-```
-Start the game:
-```
-./Tetris
-```
-#### Windows
-Install [CMake](https://cmake.org/), use CMake GUI or command line to generate
-Visual Studio .sln file, then build with VS.
-
 ## Controls
 ```
 Left player:
@@ -58,6 +27,6 @@ Right player:
 
 ![Tetris image](img/tetrisG.png)
 
-set ```GRAPHICS``` to ```OFF``` in CMakeLists.txt for barebones look:
+configure with ```cmake -DGRAPHICS=OFF ..``` for barebones look:
 
 ![Tetris image2](img/tetris.png)
