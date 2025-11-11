@@ -9,6 +9,7 @@ Two player vs battle Tetris game
 ```
 git submodule update --init
 mkdir build && cd build
+cmake ..
 cmake --build .
 ```
 ## Controls
