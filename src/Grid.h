@@ -64,8 +64,8 @@ private:
 	int scoreLines = 0;
 	int maxScore = 0;
 	bool player2;
-	const char* filename = "data.txt";
-	const char* filename2 = "data2.txt";
+	const char* filename = "data/data.txt";
+	const char* filename2 = "data/data2.txt";
 
 	sf::RenderWindow* m_window{};
 

@@ -32,7 +32,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC
     sfml-graphics
     sfml-system
     sfml-window
-    sfml-network
     sfml-audio
 )
 

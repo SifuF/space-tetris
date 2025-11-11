@@ -14,7 +14,7 @@ private:
 	std::optional<sf::Sprite> shape;
 	sf::Texture shapeT;
 #else
-	sf::RectangleShape shape;
+	std::optional <sf::RectangleShape> shape;
 #endif
 
 	sf::RenderWindow* m_window{};
@@ -34,7 +34,7 @@ public:
 		shape->setScale({ length / float(shapeT.getSize().x / 9), length / float(shapeT.getSize().y) });
 #else
 		sf::Vector2f v(length, length);
-		shape.setSize(v);
+		shape.emplace(v);
 #endif
 		shape->setPosition({ 100.0f, 100.0f });
 	}
@@ -61,7 +61,7 @@ public:
 		//shape->setColor(c);	//single texture blended with color value
 #else
 		
-		shape.setFillColor(c);	//used for RectangleShape
+		shape->setFillColor(c);	//used for RectangleShape
 #endif	
 	}
 

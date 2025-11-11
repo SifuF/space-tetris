@@ -15,7 +15,9 @@ private:
 
 public:
 	Background() {
-		texture.loadFromFile("gfx/bg.jpg");
+		if (!texture.loadFromFile("gfx/bg.jpg")) {
+			throw std::runtime_error("cannot open background texture");
+		}
 		sprite.emplace(texture);
 		sprite->setScale({ (GameConfig::screenWidth + border) / float(texture.getSize().x), (GameConfig::screenHeight + border) / float(texture.getSize().y) });
 		sprite->setPosition({ sprite->getPosition().x - border / 2.0f, sprite->getPosition().y - border / 2.0f });
